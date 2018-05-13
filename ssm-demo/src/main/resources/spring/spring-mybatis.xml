@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+	<!-- 配置数据源 -->
+	<!-- 引入properties文件 -->
+	<!-- <context:property-placeholder location="classpath:jdbc.properties"/>
+	<context:property-placeholder location="classpath:quartz.properties"></context:property-placeholder> -->
+	
+	<bean name="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>	
+	<!-- 配置 Spirng 的 JdbcTemplate -->
+	<bean id="jdbcTemplate" 
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- myBatis文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描module目录, 省掉Configuration.xml里的手工配置 -->
+		<!-- <property name="mapperLocations" value="classpath:com/springsecurity/*/mapping/*.xml" /> -->
+		<!-- <property name="mapperLocations" value="classpath*:spring/SqlMapConfig.xml" /> -->
+		<property name="mapperLocations" value="classpath:pers/weisg/ssm/sqlMapping/*.xml" />
+		<!-- <property name="mapperLocations" value="classpath*:com/springsecurity/mybatisConfig.xml" /> -->
+	</bean>
+	<!-- dao文件对象注入 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="pers.weisg.ssm.dao" />
+		<!-- 这个属性一般都用不到，只有当你配置多数据源的时候，这是会有多个sqlSessionFactory，
+		你就需要通过该属性来指定哪一个sqlSessionFactory（值为SqlSessionFactoryBean <bean>配置中的id属性） -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		自动扫描module目录, 省掉Configuration.xml里的手工配置自动扫描mapping.xml文件
+		<property name="mapperLocations" value="classpath:com/weisg/website/mapping/*.xml" />
+	</bean> -->
+	
+	<!-- 注解方式配置事物 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+</beans>

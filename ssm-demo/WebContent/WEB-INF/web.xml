@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+
+
+	<!-- SpringMVC的前端控制器 -->
+	<servlet>
+		<servlet-name>Hello</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 设置自己定义的控制器xml文件 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath*:spring/spring-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!-- Spring MVC配置文件结束 -->
+
+	<!-- 拦截设置 -->
+	<servlet-mapping>
+		<servlet-name>Hello</servlet-name>
+		<!-- 由SpringMVC拦截所有请求 -->
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>
