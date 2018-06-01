@@ -2,14 +2,14 @@ package pers.weisg.site.entity;
 
 /** 
  * @Description: TODO(用一句话描述该文件做什么)
- * @author WEISANGNG   
- * @date 2018年2月15日   
+ * @author WEISANGNG
+ * @date 2018年5月15日   
  */
 public class User {
-	
 	private String userId;
 	private String userName;
 	private String userNo;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -28,5 +28,4 @@ public class User {
 	public void setUserNo(String userNo) {
 		this.userNo = userNo;
 	}
-	
 }
